@@ -122,7 +122,6 @@ export default function FlightListContainer({
         selectedStops.length === 0 ||
         selectedStops.some((filter) =>
           flight.itineraries.some((itinerary) => {
-            console.log(itinerary.segments.length);
             return itinerary.segments.length === filter + 1;
           })
         );
