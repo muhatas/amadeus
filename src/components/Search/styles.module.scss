@@ -1,0 +1,13 @@
+.search {
+    background: #ddd;
+
+    &_button {
+        button {
+            height: 50px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}

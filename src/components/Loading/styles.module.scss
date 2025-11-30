@@ -1,0 +1,14 @@
+@import "@/styles/mixins.scss";
+
+.loading {
+  @include width-height(30px, 30px);
+  border-radius: 100%;
+  border-width: 4px;
+  border-style: solid;
+  border-color: #d00;
+  border-top-color: transparent !important;
+
+  &.white {
+    border-color: #fff;
+  }
+}

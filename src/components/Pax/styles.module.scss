@@ -1,0 +1,76 @@
+@import "@/styles/mixins.scss";
+
+.pax_dropdown {
+  width: 100%;
+  padding: 0 0 20px;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #edf0f2;
+  border-radius: 10px;
+  box-shadow: 0 17px 25px 0 rgba(0, 0, 0, 0.35);
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50px;
+    z-index: 1;
+    transform: translateX(-50%);
+    display: block;
+  }
+
+  &::before {
+    bottom: calc(100% + 1px);
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid #edf0f2;
+    border-left: 9px solid transparent;
+  }
+
+  &::after {
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #fff;
+    border-left: 8px solid transparent;
+  }
+
+  ul {
+    li {
+      @include padding-margin(0 15px, 20px 0 0);
+      line-height: 1;
+      display: flex;
+      @include flex-align(space-between, center);
+
+      .person {
+        &_counter {
+          line-height: 1;
+        }
+      }
+
+      button {
+        @include width-height(20px, 20px);
+        color: #647281;
+        border: 2px solid #647281;
+        border-radius: 100%;
+        display: flex;
+        @include flex-align(center, center);
+
+        &.disabled,
+        &[disabled] {
+          opacity: 0.3;
+        }
+      }
+
+      svg {
+        @include width-height(10px, 10px);
+      }
+
+      span {
+        width: 30px;
+        line-height: 20px;
+        font-size: 16px;
+      }
+    }
+  }
+}

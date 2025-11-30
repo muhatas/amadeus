@@ -1,0 +1,19 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.contact {
+}
+
+.form_submit {
+  @include width-height(100%, 50px);
+  font-size: $f18;
+  color: #fff;
+  background: $primary-dark;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+}
