@@ -5,7 +5,7 @@ import classNames from "classnames";
 
 // Components
 // import Input from "@/components/Input";
-import { SearchControl } from "@/utils/templates";
+import { TextControl } from "@/utils/templates";
 
 // Styles
 import Styles from "./styles.module.scss";
@@ -82,7 +82,7 @@ export const PersonDropDown = ({
 };
 
 export default function Pax({
-  className,
+  fieldClassNames,
   id,
   label,
   adults,
@@ -125,27 +125,15 @@ export default function Pax({
     <div
       className={classNames(Styles.form_group, "relative flex items-center")}
     >
-      {/* <Input
-        className={className}
-        type="text"
-        id={id}
-        placeholder={placeholder}
-        defaultValue={newValue}
-        value={newValue}
-        readonly
-        onClick={setIsPersonDropDownOpen}
+      <TextControl
         ref={triggerRef}
-      /> */}
-
-<SearchControl
-        id={id}
-        defaultValue={newValue}
-        value={newValue}
+        fieldClassNames={fieldClassNames}
         label={label}
-        onChange={(e) => onSearch(e.target.value)}
+        id={id}
+        defaultValue={newValue}
+        value={newValue}
+        readOnly={true}
         onClick={setIsPersonDropDownOpen}
-        readonly
-        ref={triggerRef}
       />
 
       <PersonDropDown

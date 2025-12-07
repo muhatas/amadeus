@@ -1,5 +1,5 @@
-@import "@/styles/mixins";
-@import "@/styles/variables";
+@use "@/styles/mixins" as *;
+@use "@/styles/variables" as *;
 
 .form {
   &_group {
@@ -18,21 +18,13 @@
   }
 
   &_control {
-    // width: 100%;
     height: 50px;
     @include width-height(100%, 50px);
-    padding: 20px 16px 0;
-    position: relative;
+    padding: 0 16px;
     font-weight: 800;
-    color: #1f1f1f;
 
-    &[value=""] {
-      padding-top: 0;
-
-      & ~ label {
-        top: 50%;
-        transform: translateY(-50%);
-      }
+    &.filled {
+      padding-top: 20px;
     }
 
     &:is(textarea) {
@@ -47,9 +39,15 @@
 
   &_label {
     position: absolute;
-    top: 6px;
+    top: 50%;
+    transform: translateY(-50%);
     left: 16px;
     transition: all 0.25s ease;
+
+    &.has_filled {
+      top: 6px;
+      transform: none;
+    }
 
     &.has_error {
       color: #d00;

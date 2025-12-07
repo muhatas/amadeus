@@ -62,6 +62,7 @@ export default function Search() {
         )}
       >
         <Location
+          fieldClassNames="rounded-tl-md rounded-bl-md"
           id="departure"
           label="Leaving from"
           value={where}
@@ -78,7 +79,7 @@ export default function Search() {
 
         <DatePicker
           id="departure-date"
-          placeholder="Departure Date"
+          label="Departure Date"
           date={departureDate}
           minDate={moment(new Date(), "MM.DD.YYYY").format("YYYY.MM.DD")}
           startDate={departureDate}
@@ -87,7 +88,7 @@ export default function Search() {
         />
         <DatePicker
           id="return-date"
-          placeholder="Return Date"
+          label="Return Date"
           date={returnDate}
           minDate={departureDate}
           startDate={returnDate}
@@ -98,6 +99,7 @@ export default function Search() {
           setIsDepartureDateOk={setIsDepartureDateOk}
         />
         <Pax
+          fieldClassNames="rounded-tr-md rounded-br-md hover:cursor-pointer"
           type="text"
           id="pax"
           label="Travelers"

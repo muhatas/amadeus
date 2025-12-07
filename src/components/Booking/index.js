@@ -9,7 +9,7 @@ import { string, object, array } from "yup";
 // Components
 import {
   TextControl,
-  TextareaControl,
+  TextAreaControl,
   DateControl,
   GenderControl,
 } from "@/utils/templates";
@@ -218,8 +218,11 @@ export default function Booking() {
                 render={({ field, fieldState }) => (
                   <TextControl
                     {...field}
+                    fieldClassNames="rounded-md"
+                    groupClassNames="mt-6"
                     label="E-mail"
                     error={fieldState?.error}
+                    id="email"
                   />
                 )}
               />
@@ -232,7 +235,10 @@ export default function Booking() {
                     render={({ field, fieldState }) => (
                       <TextControl
                         {...field}
+                        fieldClassNames="rounded-md"
+                        groupClassNames="mt-6"
                         label="Country Code"
+                        id="phone-area"
                         error={fieldState?.error}
                       />
                     )}
@@ -245,7 +251,10 @@ export default function Booking() {
                     render={({ field, fieldState }) => (
                       <TextControl
                         {...field}
+                        fieldClassNames="rounded-md"
+                        groupClassNames="mt-6"
                         label="Phone Number"
+                        id="phone-number"
                         error={fieldState?.error}
                       />
                     )}
@@ -257,9 +266,12 @@ export default function Booking() {
                 name="address"
                 control={control}
                 render={({ field, fieldState }) => (
-                  <TextareaControl
+                  <TextAreaControl
                     {...field}
+                    fieldClassNames="rounded-md"
+                    groupClassNames="mt-6"
                     label="Address"
+                    id="address"
                     error={fieldState?.error}
                   />
                 )}
@@ -268,12 +280,12 @@ export default function Booking() {
 
             <div className={Styles.traveler_list}>
               {fields.map((item, index) => {
-                let customerLabel = "Adult";
+                let travelerLabel = "Adult";
 
                 if (item.type === 1) {
-                  customerLabel = "Child";
+                  travelerLabel = "Child";
                 } else if (item.type === 2) {
-                  customerLabel = "Infant";
+                  travelerLabel = "Infant";
                 }
 
                 return (
@@ -288,7 +300,7 @@ export default function Booking() {
                       )}
                       key={item.id}
                     >
-                      {index + 1}. Traveler ({customerLabel})
+                      {index + 1}. Traveler ({travelerLabel})
                     </div>
                     <div className={Styles.traveler_card_form}>
                       <Controller
@@ -297,6 +309,8 @@ export default function Booking() {
                         render={({ field, fieldState }) => (
                           <GenderControl
                             {...field}
+                            fieldClassNames="rounded-md"
+                            groupClassNames="mt-6"
                             label="Gender"
                             index={index}
                             error={fieldState?.error}
@@ -310,7 +324,10 @@ export default function Booking() {
                         render={({ field, fieldState }) => (
                           <TextControl
                             {...field}
+                            fieldClassNames="rounded-md"
+                            groupClassNames="mt-6"
                             label="Name"
+                            id={`traveler-${index}-name`}
                             error={fieldState?.error}
                           />
                         )}
@@ -322,7 +339,10 @@ export default function Booking() {
                         render={({ field, fieldState }) => (
                           <TextControl
                             {...field}
+                            fieldClassNames="rounded-md"
+                            groupClassNames="mt-6"
                             label="Surname"
+                            id={`traveler-${index}-surname`}
                             error={fieldState?.error}
                           />
                         )}
@@ -334,10 +354,14 @@ export default function Booking() {
                         render={({ field, fieldState }) => (
                           <DateControl
                             {...field}
+                            fieldClassNames="rounded-md"
+                            groupClassNames="mt-6"
                             label="Date of Birth"
+                            id={`traveler-${index}-dateofbirth`}
                             value={field.value}
                             error={fieldState?.error}
                             mask="00.00.0000"
+                            autoComplete="off"
                           />
                         )}
                       />
@@ -348,7 +372,10 @@ export default function Booking() {
                         render={({ field, fieldState }) => (
                           <TextControl
                             {...field}
+                            fieldClassNames="rounded-md"
+                            groupClassNames="mt-6"
                             label="Passport Number"
+                            id={`traveler-${index}-passport`}
                             value={field.value}
                             max="14"
                             error={fieldState?.error}

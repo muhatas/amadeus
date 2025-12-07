@@ -7,27 +7,10 @@ import { faAngleRight, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 // Components
 import Input from "@/components/Input";
+import { DatePickerInput } from "@/utils/templates";
 
 // Styles
 import Styles from "./styles.module.scss";
-
-export const DatePickerInput = forwardRef(
-  ({ type, value, onClick, className, id, isReturn }, customInput) => {
-    return (
-      <Input
-        className={className}
-        type={type}
-        id={id}
-        value={moment(value, "MM.DD.YYYY").format("DD MMMM, YYYY")}
-        defaultValue={value}
-        onClick={onClick}
-        ref={customInput}
-        disabled={isReturn === false}
-        readonly={true}
-      />
-    );
-  }
-);
 
 export const DatePickerHeader = forwardRef(
   (
@@ -80,13 +63,8 @@ export const DatePickerCommonSettings = (customProps) => {
     customInput: (
       <DatePickerInput
         type={customProps.type}
-        label={customProps.placeholder}
+        label={customProps.label}
         isReturn={customProps.isReturn}
-        className={classNames(
-          Styles.custom_date_input,
-          customProps.className,
-          "block grow px-3 text-base text-start bg-white text-gray-900 placeholder:text-gray-400 outline-1 outline-gray-300 sm:text-sm/6 hover:cursor-pointer"
-        )}
       />
     ),
   };

@@ -13,8 +13,7 @@ import {
 
 // Components
 import Loading from "@/components/Loading";
-import { SearchControl } from "@/utils/templates";
-import Input from "@/components/Input";
+import { TextControl } from "@/utils/templates";
 
 // Utils
 import { ClientApi } from "@/utils/api";
@@ -110,7 +109,7 @@ export const LocationList = ({
 
 // Location
 export default function Location({
-  className,
+  fieldClassNames,
   id,
   label,
   value,
@@ -190,24 +189,14 @@ export default function Location({
     <div
       className={classNames(Styles.form_group, "relative flex items-center")}
     >
-      {/* <Input
-        type="text"
-        className={className}
-        id={id}
-        value={value}
-        placeholder={placeholder}
-        onChange={(e) => onSearch(e.target.value)}
-        onClick={onToogleDropDown}
+      <TextControl
         ref={triggerRef}
-      /> */}
-
-      <SearchControl
+        fieldClassNames={fieldClassNames}
         id={id}
         value={value}
         label={label}
         onChange={(e) => onSearch(e.target.value)}
         onClick={onToogleDropDown}
-        ref={triggerRef}
       />
 
       <LocationList

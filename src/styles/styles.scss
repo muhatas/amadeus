@@ -19,121 +19,121 @@ body {
 }
 
 .react-datepicker {
-    width: 582px;
-    padding: 10px;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    border: 1px solid #edf0f2;
-    border-radius: 10px;
-    box-shadow: 0 17px 25px 0 rgba(0, 0, 0, 0.35);
-    display: flex;
+  width: 582px;
+  padding: 10px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  border: 1px solid #edf0f2;
+  border-radius: 10px;
+  box-shadow: 0 17px 25px 0 rgba(0, 0, 0, 0.35);
+  display: flex;
 
-    &__input-container {
-      width: 100%;
+  &__input-container {
+    width: 100%;
 
-      .custom-date-input {
-        text-align: left;
-
-        &[disabled] {
-          opacity: 0.5;
-        }
-      }
-    }
-
-    &-wrapper {
-      width: 100%;
-    }
-
-    &__navigation {
-      @include width-height(40px, 40px);
-      padding: 0;
-      text-indent: 0;
-      color: #7c8594;
-      background: #f3f6f8;
-      display: flex;
-      @include flex-align(center, center);
+    .custom-date-input {
+      text-align: left;
 
       &[disabled] {
-        opacity: 0.3;
-      }
-    }
-
-    &__month-container {
-      float: none;
-      width: 50%;
-      &:nth-last-child(2) {
-        .react-datepicker__header {
-          border-radius: 10px 0 0 0 !important;
-        }
-      }
-
-      &:nth-last-child(1) {
-        border-left: 1px solid #edf0f2;
-        .react-datepicker__header {
-          border-radius: 0 10px 0 0 !important;
-        }
-      }
-    }
-
-    &__header {
-      padding: 0;
-      border: none;
-      background: none;
-    }
-
-    &__current-month {
-      height: 40px;
-      font-weight: 400;
-      color: #7c8594;
-      display: flex;
-      @include flex-align(center, center);
-
-      b {
-        margin: 0 10px 0 0;
-      }
-    }
-
-    &__day-names {
-      margin: 0;
-    }
-
-    &__day-name,
-    &__day {
-      @include width-height(40px, 40px);
-      margin: 0;
-      line-height: 0;
-      border-radius: 4px;
-      display: inline-flex;
-      @include flex-align(center, center);
-    }
-
-    &__day-name {
-      color: #7c8594;
-    }
-
-    &__month {
-      margin: 0;
-    }
-
-    &-popper {
-      left: 0;
-      transform: none !important;
-
-      .react-datepicker__triangle {
-        left: 50px !important;
-        transform: rotate(180deg) !important;
-        fill: #fff !important;
-        color: #edf0f2 !important;
-        stroke: none !important;
-      }
-
-      &[data-placement="bottom"] {
-        top: calc(100% + 10px) !important;
-
-        .react-datepicker__triangle {
-          bottom: calc(100% - 1px) !important;
-        }
+        opacity: 0.5;
       }
     }
   }
+
+  &-wrapper {
+    width: 100%;
+  }
+
+  &__navigation {
+    @include width-height(40px, 40px);
+    padding: 0;
+    text-indent: 0;
+    color: #7c8594;
+    background: #f3f6f8;
+    display: flex;
+    @include flex-align(center, center);
+
+    &[disabled] {
+      opacity: 0.3;
+    }
+  }
+
+  &__month-container {
+    float: none;
+    width: 50%;
+    &:nth-last-child(2) {
+      .react-datepicker__header {
+        border-radius: 10px 0 0 0 !important;
+      }
+    }
+
+    &:nth-last-child(1) {
+      border-left: 1px solid #edf0f2;
+      .react-datepicker__header {
+        border-radius: 0 10px 0 0 !important;
+      }
+    }
+  }
+
+  &__header {
+    padding: 0;
+    border: none;
+    background: none;
+  }
+
+  &__current-month {
+    height: 40px;
+    font-weight: 400;
+    color: #7c8594;
+    display: flex;
+    @include flex-align(center, center);
+
+    b {
+      margin: 0 10px 0 0;
+    }
+  }
+
+  &__day-names {
+    margin: 0;
+  }
+
+  &__day-name,
+  &__day {
+    @include width-height(40px, 40px);
+    margin: 0;
+    line-height: 0;
+    border-radius: 4px;
+    display: inline-flex;
+    @include flex-align(center, center);
+  }
+
+  &__day-name {
+    color: #7c8594;
+  }
+
+  &__month {
+    margin: 0;
+  }
+
+  &-popper {
+    left: 0;
+    transform: none !important;
+
+    .react-datepicker__triangle {
+      left: 50px !important;
+      transform: rotate(180deg) !important;
+      fill: #fff !important;
+      color: #edf0f2 !important;
+      stroke: none !important;
+    }
+
+    &[data-placement="bottom"] {
+      top: calc(100% + 10px) !important;
+
+      .react-datepicker__triangle {
+        bottom: calc(100% - 1px) !important;
+      }
+    }
+  }
+}
