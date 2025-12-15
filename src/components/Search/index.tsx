@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { JSX, useState } from "react";
 import { useRouter } from "next/navigation";
 import classNames from "classnames";
 import moment from "moment";
@@ -14,26 +14,38 @@ import Pax from "@/components/Pax";
 // Styles
 import Styles from "./styles.module.scss";
 
-export default function Search() {
+type FlightSearchQuery = {
+  originLocationCode: string;
+  destinationLocationCode: string;
+  departureDate: string;
+  adults: number;
+  max: number;
+  returnDate?: string;
+  children?: number;
+  infants?: number;
+};
+
+export default function Search(): JSX.Element {
   const router = useRouter();
-  const [where, setWhere] = useState("");
-  const [to, setTo] = useState("");
-  const [originLocationCode, setOriginLocationCode] = useState("");
-  const [destinationLocationCode, setDestinationLocationCode] = useState("");
-  const [departureDate, setDepartureDate] = useState(
+  const [where, setWhere] = useState<string>("");
+  const [to, setTo] = useState<string>("");
+  const [originLocationCode, setOriginLocationCode] = useState<string>("");
+  const [destinationLocationCode, setDestinationLocationCode] =
+    useState<string>("");
+  const [departureDate, setDepartureDate] = useState<string>(
     moment(new Date()).format("YYYY-MM-DD")
   );
-  const [isDepartureDateOk, setIsDepartureDateOk] = useState(false);
-  const [returnDate, setReturnDate] = useState(
+  const [isDepartureDateOk, setIsDepartureDateOk] = useState<boolean>(false);
+  const [returnDate, setReturnDate] = useState<string>(
     moment(new Date()).format("YYYY-MM-DD")
   );
-  const [isReturn, setIsReturn] = useState(false);
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
-  const [infants, setInfants] = useState(0);
+  const [isReturn, setIsReturn] = useState<boolean>(false);
+  const [adults, setAdults] = useState<number>(1);
+  const [children, setChildren] = useState<number>(0);
+  const [infants, setInfants] = useState<number>(0);
 
   const onSearch = async () => {
-    const obj = {
+    const payload: FlightSearchQuery = {
       originLocationCode: originLocationCode,
       destinationLocationCode: destinationLocationCode,
       departureDate: departureDate,
@@ -41,11 +53,11 @@ export default function Search() {
       max: 250,
     };
 
-    if (returnDate) obj.returnDate = returnDate;
-    if (children) obj.children = children;
-    if (infants) obj.infants = infants;
+    if (isReturn) payload.returnDate = returnDate;
+    if (children) payload.children = children;
+    if (infants) payload.infants = infants;
 
-    router.push(`/flights?${qs.stringify(obj)}`);
+    router.push(`/flights?${qs.stringify(payload)}`);
   };
 
   return (
@@ -76,7 +88,6 @@ export default function Search() {
           setValue={setTo}
           setCityCode={setDestinationLocationCode}
         />
-
         <DatePicker
           id="departure-date"
           label="Departure Date"
@@ -100,7 +111,6 @@ export default function Search() {
         />
         <Pax
           fieldClassNames="rounded-tr-md rounded-br-md hover:cursor-pointer"
-          type="text"
           id="pax"
           label="Travelers"
           adults={adults}

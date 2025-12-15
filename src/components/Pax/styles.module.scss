@@ -42,7 +42,7 @@
       display: flex;
       @include flex-align(space-between, center);
 
-      .person {
+      .pax {
         &_counter {
           line-height: 1;
         }

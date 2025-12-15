@@ -1,18 +1,60 @@
-import { forwardRef } from "react";
+import {
+  forwardRef,
+  type Dispatch,
+  type SetStateAction,
+  type ReactElement,
+} from "react";
 import classNames from "classnames";
-import ReactDatePicker from "react-datepicker";
+import ReactDatePicker, {
+  type DatePickerProps,
+  type ReactDatePickerCustomHeaderProps,
+} from "react-datepicker";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 // Components
-import Input from "@/components/Input";
 import { DatePickerInput } from "@/utils/templates";
 
 // Styles
 import Styles from "./styles.module.scss";
 
-export const DatePickerHeader = forwardRef(
+type DatePicker = {
+  id: string;
+  label: string;
+  date: string;
+  startDate: string;
+  minDate: string;
+  setDate: Dispatch<SetStateAction<string>>;
+  isReturn?: boolean;
+  setIsReturn?: Dispatch<SetStateAction<boolean>>;
+  isDepartureDateOk?: boolean;
+  setIsDepartureDateOk: Dispatch<SetStateAction<boolean>>;
+};
+
+type DatePickerCommonSettingsArgs = {
+  label: string;
+  isReturn?: boolean;
+  name: string;
+  id: string;
+  value: string;
+};
+
+type DatePickerCommonSettingsReturn = Pick<
+  DatePickerProps,
+  "renderCustomHeader" | "monthsShown" | "dateFormat" | "customInput"
+>;
+
+const toDateOrNull = (value?: string): Date | null => {
+  if (!value) return null;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d;
+};
+
+export const DatePickerHeader = forwardRef<
+  HTMLDivElement,
+  ReactDatePickerCustomHeaderProps
+>(
   (
     {
       monthDate,
@@ -22,17 +64,20 @@ export const DatePickerHeader = forwardRef(
       prevMonthButtonDisabled,
       nextMonthButtonDisabled,
     },
-    customHeader
+    ref
   ) => (
-    <div ref={customHeader}>
+    <div ref={ref}>
       <button
-        className={`react-datepicker__navigation react-datepicker__navigation--previous ${
-          prevMonthButtonDisabled &&
-          "react-datepicker__navigation--previous-disabled"
-        }`}
+        className={classNames(
+          {
+            "react-datepicker__navigation--previous-disabled":
+              prevMonthButtonDisabled,
+            invisible: customHeaderCount === 1,
+          },
+          "react-datepicker__navigation react-datepicker__navigation--previous"
+        )}
         onClick={decreaseMonth}
         disabled={prevMonthButtonDisabled}
-        style={customHeaderCount === 1 ? { visibility: "hidden" } : null}
       >
         <FontAwesomeIcon icon={faAngleLeft} />
       </button>
@@ -41,13 +86,16 @@ export const DatePickerHeader = forwardRef(
         {monthDate.toLocaleString("en-US", { year: "numeric" })}
       </div>
       <button
-        className={`react-datepicker__navigation react-datepicker__navigation--next ${
-          nextMonthButtonDisabled &&
-          "react-datepicker__navigation--next-disabled"
-        }`}
+        className={classNames(
+          {
+            "react-datepicker__navigation--next-disabled":
+              nextMonthButtonDisabled,
+            invisible: customHeaderCount === 0,
+          },
+          "react-datepicker__navigation react-datepicker__navigation--next"
+        )}
         onClick={increaseMonth}
         disabled={nextMonthButtonDisabled}
-        style={customHeaderCount === 0 ? { visibility: "hidden" } : null}
       >
         <FontAwesomeIcon icon={faAngleRight} />
       </button>
@@ -55,23 +103,27 @@ export const DatePickerHeader = forwardRef(
   )
 );
 
-export const DatePickerCommonSettings = (customProps) => {
+DatePickerHeader.displayName = "DatePickerHeader";
+
+export const DatePickerCommonSettings = (
+  customProps: DatePickerCommonSettingsArgs
+): DatePickerCommonSettingsReturn => {
   return {
     renderCustomHeader: (props) => <DatePickerHeader {...props} />,
     monthsShown: 2,
     dateFormat: "MM.dd.YYYY",
     customInput: (
       <DatePickerInput
-        type={customProps.type}
+        id={customProps.id}
+        name={customProps.name}
         label={customProps.label}
         isReturn={customProps.isReturn}
       />
-    ),
+    ) as ReactElement,
   };
 };
 
 export default function DatePicker({
-  className,
   id,
   label,
   date,
@@ -82,12 +134,13 @@ export default function DatePicker({
   setIsReturn,
   isDepartureDateOk,
   setIsDepartureDateOk,
-}) {
-  const nextDatePicker = (bool) => {
+}: DatePicker) {
+  const nextDatePicker = (bool: boolean): void => {
     if (isDepartureDateOk !== undefined) setIsDepartureDateOk(bool);
   };
 
-  const onChangeDates = (selectedDate) => {
+  const onChangeDates = (selectedDate: Date | null): void => {
+    console.log(typeof selectedDate);
     setDate(moment(selectedDate).format("YYYY-MM-DD"));
     if (isDepartureDateOk === undefined) {
       setIsDepartureDateOk(true);
@@ -96,6 +149,10 @@ export default function DatePicker({
     }
   };
 
+  const selectedDate = toDateOrNull(date);
+  const minDateObj = toDateOrNull(minDate);
+  const startDateObj = toDateOrNull(startDate);
+
   return (
     <div
       className={classNames(Styles.form_group, "relative flex items-center")}
@@ -103,16 +160,15 @@ export default function DatePicker({
       <ReactDatePicker
         id={id}
         {...DatePickerCommonSettings({
-          type: "text",
-          className: className,
+          id: id,
+          name: id,
           label: label,
           value: minDate,
           isReturn: isReturn,
-          setIsReturn: setIsReturn ? setIsReturn : null,
         })}
-        selected={date}
-        minDate={minDate}
-        startDate={new Date(startDate)}
+        selected={selectedDate}
+        minDate={minDateObj ?? undefined}
+        startDate={startDateObj ?? undefined}
         open={isDepartureDateOk && isReturn}
         onChange={(selectedDate) => onChangeDates(selectedDate)}
         onClickOutside={() => nextDatePicker(false)}

@@ -24,6 +24,7 @@ type BaseControlProps = {
 };
 
 type TextControlEventProps = {
+  defaultValue?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   onClick?: MouseEventHandler<HTMLInputElement>;
 };
@@ -284,7 +285,7 @@ export const GenderControl = forwardRef<HTMLInputElement, GenderControlProps>(
 export const DatePickerInput = forwardRef<
   HTMLInputElement,
   DatePickerControlProps
->(({ label, id, value, isReturn, onClick, onChange }, customInput) => {
+>(({ label, id, value, isReturn, onClick, onChange }, ref) => {
   return (
     <div className={classNames(Styles.form_group)}>
       <label
@@ -297,7 +298,7 @@ export const DatePickerInput = forwardRef<
         {label}
       </label>
       <input
-        ref={customInput}
+        ref={ref}
         className={classNames(
           Styles.form_control,
           {
