@@ -33,7 +33,6 @@ type TextControlProps = BaseControlProps & TextControlEventProps;
 
 type DateControlProps = BaseControlProps &
   TextControlEventProps & {
-    autoComplete: boolean;
     mask?: string;
   };
 
@@ -49,7 +48,7 @@ type DatePickerControlProps = BaseControlProps &
 
 type GenderControlProps = BaseControlProps &
   TextControlEventProps & {
-    index: string;
+    index: number;
   };
 
 export const TextControl = forwardRef<HTMLInputElement, TextControlProps>(
@@ -227,7 +226,7 @@ export const DateControl = forwardRef<HTMLInputElement, DateControlProps>(
 );
 
 export const GenderControl = forwardRef<HTMLInputElement, GenderControlProps>(
-  ({ name, value, label, error, index, onChange }, ref) => {
+  ({ id, name, value, label, error, index, onChange }, ref) => {
     const message = error?.message;
 
     return (

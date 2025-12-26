@@ -1,6 +1,10 @@
-"use client";
-
-import { useEffect, useState, useRef } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import slugify from "slugify";
@@ -8,8 +12,55 @@ import classNames from "classnames";
 
 import { normalizeToArray } from "@/utils/shortcuts";
 
+// Types
+import type { SelectedFiltersState } from "@/utils/types";
+
 // Styles
 import Styles from "./styles.module.scss";
+
+type SortKey =
+  | "recomended"
+  | "departure-earliest"
+  | "departure-latest"
+  | "arrival-earliest"
+  | "arrival-latest"
+  | "price-lowest"
+  | "price-highest";
+
+type FilterItem = {
+  name?: string;
+  code?: string;
+};
+
+type FiltersData = {
+  airports?: FilterItem[] | null;
+  airlines?: FilterItem[] | null;
+  stops?: number | null;
+};
+
+type FilterType = keyof SelectedFiltersState;
+
+type FilterProps = {
+  title: string;
+  list?: FilterItem[] | null;
+  count?: unknown;
+  type: FilterType;
+  selectedFilters: Array<string | number>;
+  setSelectedFilters: Dispatch<SetStateAction<SelectedFiltersState>>;
+};
+
+type SortProps = {
+  sort: SortKey;
+  setSorted: Dispatch<SetStateAction<SortKey>>;
+};
+
+type FiltersProps = {
+  filters: FiltersData;
+  selectedFilters: SelectedFiltersState;
+  setSelectedFilters: Dispatch<SetStateAction<SelectedFiltersState>>;
+  sort: SortKey;
+  setSorted: Dispatch<SetStateAction<SortKey>>;
+};
 
 export const Filter = ({
   title,
@@ -18,23 +69,25 @@ export const Filter = ({
   type,
   selectedFilters,
   setSelectedFilters,
-}) => {
-  const triggerRef = useRef(null);
-  const dropdownRef = useRef(null);
-  const [isShow, setIsShow] = useState(false);
+}: FilterProps) => {
+  const triggerRef = useRef<HTMLDivElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [isShow, setIsShow] = useState<boolean>(false);
 
-  const closeDropdown = (event) => {
+  const closeDropdown = (event: MouseEvent): void => {
+    const target = event.target as Node;
+
     if (
       triggerRef.current &&
-      !triggerRef.current.contains(event.target) &&
+      !triggerRef.current.contains(target) &&
       dropdownRef.current &&
-      !dropdownRef.current.contains(event.target)
+      !dropdownRef.current.contains(target)
     ) {
       setIsShow(false);
     }
   };
 
-  const onSelect = (code) => {
+  const onSelect = (code: string | number): void => {
     setSelectedFilters((prev) => {
       const current = new Set(prev?.[type] || []);
       if (current.has(code)) current.delete(code);
@@ -112,12 +165,12 @@ export const Filter = ({
   );
 };
 
-export const Sort = ({ sort, setSorted }) => {
+export const Sort = ({ sort, setSorted }: SortProps) => {
   return (
     <select
       className={classNames(Styles.sorting, "px-4")}
       value={sort}
-      onChange={(e) => setSorted(e.target.value)}
+      onChange={(e) => setSorted(e.target.value as SortKey)}
     >
       <option value="recomended">Recomended</option>
       <option value="departure-earliest">Departure (earliest)</option>
@@ -136,7 +189,7 @@ export default function Filters({
   setSelectedFilters,
   sort,
   setSorted,
-}) {
+}: FiltersProps) {
   const { airports, airlines, stops } = filters;
   const { selectedAirports, selectedAirlines, selectedStops } = selectedFilters;
 

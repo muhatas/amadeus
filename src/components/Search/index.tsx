@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX, useState } from "react";
+import react from "react";
 import { useRouter } from "next/navigation";
 import classNames from "classnames";
 import moment from "moment";
@@ -25,24 +25,24 @@ type FlightSearchQuery = {
   infants?: number;
 };
 
-export default function Search(): JSX.Element {
+export default function Search() {
   const router = useRouter();
-  const [where, setWhere] = useState<string>("");
-  const [to, setTo] = useState<string>("");
-  const [originLocationCode, setOriginLocationCode] = useState<string>("");
+  const [where, setWhere] = react.useState<string>("");
+  const [to, setTo] = react.useState<string>("");
+  const [originLocationCode, setOriginLocationCode] = react.useState<string>("");
   const [destinationLocationCode, setDestinationLocationCode] =
-    useState<string>("");
-  const [departureDate, setDepartureDate] = useState<string>(
+    react.useState<string>("");
+  const [departureDate, setDepartureDate] = react.useState<string>(
     moment(new Date()).format("YYYY-MM-DD")
   );
-  const [isDepartureDateOk, setIsDepartureDateOk] = useState<boolean>(false);
-  const [returnDate, setReturnDate] = useState<string>(
+  const [isDepartureDateOk, setIsDepartureDateOk] = react.useState<boolean>(false);
+  const [returnDate, setReturnDate] = react.useState<string>(
     moment(new Date()).format("YYYY-MM-DD")
   );
-  const [isReturn, setIsReturn] = useState<boolean>(false);
-  const [adults, setAdults] = useState<number>(1);
-  const [children, setChildren] = useState<number>(0);
-  const [infants, setInfants] = useState<number>(0);
+  const [isReturn, setIsReturn] = react.useState<boolean>(false);
+  const [adults, setAdults] = react.useState<number>(1);
+  const [children, setChildren] = react.useState<number>(0);
+  const [infants, setInfants] = react.useState<number>(0);
 
   const onSearch = async () => {
     const payload: FlightSearchQuery = {

@@ -47,8 +47,8 @@ type DatePickerCommonSettingsReturn = Pick<
 
 const toDateOrNull = (value?: string): Date | null => {
   if (!value) return null;
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? null : d;
+  const date = moment(value);
+  return date.isValid() ? date.toDate() : null;
 };
 
 export const DatePickerHeader = forwardRef<
@@ -140,7 +140,6 @@ export default function DatePicker({
   };
 
   const onChangeDates = (selectedDate: Date | null): void => {
-    console.log(typeof selectedDate);
     setDate(moment(selectedDate).format("YYYY-MM-DD"));
     if (isDepartureDateOk === undefined) {
       setIsDepartureDateOk(true);

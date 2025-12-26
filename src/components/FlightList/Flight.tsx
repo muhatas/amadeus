@@ -1,5 +1,11 @@
-"use client";
-import { useEffect, useState, useRef, Fragment } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  Fragment,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useRouter } from "next/navigation";
 import classNames from "classnames";
 import moment from "moment";
@@ -19,27 +25,42 @@ import { useBooking } from "@/context/bookingContext";
 import { ClientApi } from "@/utils/api";
 import { durationFormat } from "@/utils/shortcuts";
 
+// Types
+import { FlightOffer, PricingResponse } from "@/utils/types";
+
 // Styles
 import Styles from "./styles.module.scss";
 
-export default function Flight({ flight, isLoading, setIsLoading }) {
+type FlightProps = {
+  flight: FlightOffer;
+  isLoading: boolean;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+};
+
+export default function Flight({
+  flight,
+  isLoading,
+  setIsLoading,
+}: FlightProps) {
   const router = useRouter();
   const { setSelectedFlight } = useBooking();
-  const stopsTooltipRef = useRef(null);
-  const stopsTooltipToggleRef = useRef(null);
-  const [isShowTooltip, setIsShowTooltip] = useState(false);
-  const [isShowRoutes, setIsShowRoutes] = useState(false);
+  const stopsTooltipRef = useRef<HTMLDivElement | null>(null);
+  const stopsTooltipToggleRef = useRef<HTMLDivElement | null>(null);
+  const [isShowTooltip, setIsShowTooltip] = useState<boolean>(false);
+  const [isShowRoutes, setIsShowRoutes] = useState<boolean>(false);
   const { itineraries, price, travelerPricings } = flight;
   const { fareDetailsBySegment } = travelerPricings[0];
   const { amenities } = fareDetailsBySegment[0];
   const { grandTotal, currency } = price;
 
-  const stopsTooltipToggle = (event) => {
+  const stopsTooltipToggle = (event: MouseEvent): void => {
+    const target = event.target as Node;
+
     if (
       stopsTooltipRef.current &&
-      stopsTooltipRef.current.contains(event.target) &&
-      !stopsTooltipToggleRef.current &&
-      !stopsTooltipToggleRef.current.contains(event.target)
+      !stopsTooltipRef.current.contains(target) &&
+      stopsTooltipToggleRef.current &&
+      !stopsTooltipToggleRef.current.contains(target)
     ) {
       setIsShowTooltip(false);
     }
@@ -56,12 +77,12 @@ export default function Flight({ flight, isLoading, setIsLoading }) {
     setIsLoading(true);
 
     try {
-      const response = await ClientApi.post(
+      const response = await ClientApi.post<PricingResponse>(
         "/v1/shopping/flight-offers/pricing",
         payload
       );
 
-      setSelectedFlight(response?.data?.data?.flightOffers);
+      setSelectedFlight(response?.data.flightOffers);
       router.push("/booking");
     } catch (error) {
       setIsLoading(false);
@@ -91,14 +112,14 @@ export default function Flight({ flight, isLoading, setIsLoading }) {
                 )}
               >
                 <div className="w-1/3">
-                  {item.segments.at(0).departure.iataCode}
+                  {item.segments.at(0)?.departure.iataCode}
                   <span className="block">
-                    {moment(item.segments.at(0).departure.at).format(
+                    {moment(item.segments.at(0)?.departure.at).format(
                       "DD MMMM, dddd YYYY"
                     )}
                   </span>
                   <b className="block">
-                    {moment(item.segments.at(0).departure.at).format("HH:mm")}
+                    {moment(item.segments.at(0)?.departure.at).format("HH:mm")}
                   </b>
                 </div>
 
@@ -145,14 +166,14 @@ export default function Flight({ flight, isLoading, setIsLoading }) {
                 </div>
 
                 <div className="w-1/3 text-end">
-                  {item.segments.at(-1).arrival.iataCode}
+                  {item.segments.at(-1)?.arrival.iataCode}
                   <span className="block">
-                    {moment(item.segments.at(-1).arrival.at).format(
+                    {moment(item.segments.at(-1)?.arrival.at).format(
                       "DD MMMM, dddd YYYY"
                     )}
                   </span>
                   <b className="block">
-                    {moment(item.segments.at(-1).arrival.at).format("HH:mm")}
+                    {moment(item.segments.at(-1)?.arrival.at).format("HH:mm")}
                   </b>
                 </div>
               </div>

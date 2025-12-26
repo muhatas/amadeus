@@ -11,6 +11,9 @@ import Loading from "@/components/Loading";
 // Utils
 import { ClientApi } from "@/utils/api";
 
+// Types
+import type { FlightOffer, SelectedFiltersState } from "@/utils/types";
+
 // Styles
 import Styles from "./styles.module.scss";
 
@@ -30,22 +33,6 @@ type DictionariesLocations = {
   countryCode: string;
 };
 
-type FlightOffer = {
-  id?: string;
-  price: {
-    grandTotal: string;
-    currency: string;
-  };
-  itineraries: Array<{
-    duration: string;
-    segments: Array<{
-      carrierCode: string;
-      departure: { iataCode: string; at: string };
-      arrival: { iataCode: string; at: string };
-    }>;
-  }>;
-};
-
 type FlightOffersResponse = {
   data: FlightOffer[];
   dictionaries?: {
@@ -58,12 +45,6 @@ type FiltersState = {
   airlines: Array<{ code: string; name: string }>;
   airports: Array<{ code: string } & DictionariesLocations>;
   stops: number;
-};
-
-type SelectedFiltersState = {
-  selectedAirlines: string[];
-  selectedAirports: string[];
-  selectedStops: number[];
 };
 
 type SortKey =
@@ -190,7 +171,7 @@ export default function FlightListContainer({
         selectedStops.length === 0 ||
         selectedStops.some((filter) =>
           flight.itineraries.some(
-            (itinerary) => itinerary.segments.length === filter + 1
+            (itinerary) => itinerary.segments.length === Number(filter) + 1
           )
         );
 

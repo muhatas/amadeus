@@ -1,5 +1,5 @@
 import Booking from "@/components/Booking";
 
-export default async function BookingPage() {
+export default function BookingPage() {
   return <Booking />;
 }

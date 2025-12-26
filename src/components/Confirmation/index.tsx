@@ -4,7 +4,11 @@ import { useEffect } from "react";
 // Utils
 import { ClientApi } from "@/utils/api";
 
-export default function ConfirmationPage({ id }) {
+type ConfirmationPageProps = {
+  id: string;
+}
+
+export default function ConfirmationPage({ id }: ConfirmationPageProps) {
   const getBookingDetails = async () => {
     const response = await ClientApi.get(`/v1/booking/flight-orders/${id}`);
   };

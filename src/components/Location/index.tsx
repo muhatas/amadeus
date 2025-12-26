@@ -191,8 +191,7 @@ export default function Location({
               keyword: formatValue,
             }
           );
-
-          console.log(response?.data);
+          
           setDropdownStatu(true);
           setLocationlist(response?.data);
         }

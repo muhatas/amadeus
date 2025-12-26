@@ -2,11 +2,15 @@
 
 import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import {
+  useForm,
+  Controller,
+  useFieldArray,
+  type SubmitHandler,
+} from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { string, object, array } from "yup";
+import { string, object, array, type InferType } from "yup";
 
-// Components
 import {
   TextControl,
   TextAreaControl,
@@ -22,9 +26,68 @@ import { useBooking } from "@/context/bookingContext";
 import { ClientApi } from "@/utils/api";
 import { formatDateForOrder, getYear } from "@/utils/shortcuts";
 
+import type { FlightOffer } from "@/utils/types";
+
 // Styles
 import Styles from "./styles.module.scss";
 import classNames from "classnames";
+
+type TravelerForm = {
+  id: string;
+  gender: string;
+  name: {
+    firstName: string;
+    lastName: string;
+  };
+  dateOfBirth: string;
+  passportNumber: string;
+  type: number;
+};
+
+type BookingFormValues = {
+  email?: string;
+  phone?: {
+    phoneArea?: string;
+    phoneNumber?: string;
+  };
+  address?: string;
+  travelers: TravelerForm[];
+};
+
+type TravelerDocument = {
+  documentType: "PASSPORT";
+  birthPlace: string;
+  issuanceLocation: string;
+  issuanceDate: string;
+  number: string;
+  expiryDate: string;
+  issuanceCountry: string;
+  validityCountry: string;
+  nationality: string;
+  holder: boolean;
+};
+
+type TravelerContact = {
+  emailAddress?: string;
+  phones: Array<{
+    deviceType: "MOBILE";
+    countryCallingCode?: string;
+    number?: string;
+  }>;
+};
+
+type Travelers = Omit<TravelerForm, "type"> & {
+  dateOfBirth: string;
+  contact?: TravelerContact;
+  documents?: TravelerDocument[];
+};
+
+type TravelerPricing = {
+  travelerId: string;
+  travelerType: "ADULT" | "CHILD" | "HELD_INFANT" | string;
+};
+
+type SelectedFlight = FlightOffer[];
 
 const requiredText = "This field is required";
 
@@ -60,17 +123,25 @@ let bookingSchema = object({
     .min(1, "At least one traveler is required"),
 });
 
+type BookingSchemaValues = InferType<typeof bookingSchema>;
+
 export default function Booking() {
   const router = useRouter();
-  const { selectedFlight } = useBooking();
-  const travelerPricings = selectedFlight?.[0]?.travelerPricings ?? [];
+
+  const { selectedFlight } = useBooking() as {
+    selectedFlight?: SelectedFlight;
+  };
+
+  const travelerPricings: TravelerPricing[] =
+    selectedFlight?.[0]?.travelerPricings ?? [];
 
   const defaultTravelers = useMemo(
     () =>
       travelerPricings.length > 0
         ? travelerPricings.map((item) => {
             const travelerType = item.travelerType;
-            let type = 0;
+
+            let type: TravelerForm["type"] = 0;
             let dateOfBirth = "01.01.1970";
 
             if (travelerType === "CHILD") {
@@ -107,28 +178,29 @@ export default function Booking() {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({
+  } = useForm<BookingFormValues>({
     mode: "onChange",
-    resolver: yupResolver(bookingSchema),
+    resolver: yupResolver(bookingSchema) as never,
     defaultValues: {
       travelers: defaultTravelers,
     },
   });
 
-  const { fields } = useFieldArray({
+  const { fields } = useFieldArray<BookingFormValues, "travelers", "id">({
     control,
     name: "travelers",
+    keyName: "id",
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit: SubmitHandler<BookingFormValues> = async (data) => {
     const emailAddress = data?.email;
     const phoneArea = data?.phone?.phoneArea;
     const phoneNumber = data?.phone?.phoneNumber;
 
-    const travelers = data?.travelers?.map((item) => {
+    const travelers: Travelers[] = (data.travelers ?? []).map((item) => {
       const { type, ...rest } = item;
 
-      const baseTraveler = {
+      const baseTraveler: Travelers = {
         ...rest,
         dateOfBirth: formatDateForOrder(item.dateOfBirth),
       };
@@ -184,18 +256,24 @@ export default function Booking() {
         payload
       );
 
-      const id = response?.data?.data?.id;
-      const errors = response?.data?.errors;
+      const id = (response as any)?.data?.id as string | undefined;
+      const errors = (response as any)?.errors as
+        | Array<{
+            title?: string;
+            detail?: string;
+          }>
+        | undefined;
 
-      if (!!errors?.length) {
+      if (errors?.length) {
         const { title, detail } = errors[0] || {};
         console.log(`${title} - ${detail}`);
         return;
       }
 
       router.push(`/confirmation/${id}`);
-    } catch (error) {
-      const { title, detail } = error?.response?.data?.errors?.[0] || {};
+    } catch (error: any) {
+      const { title, detail } =
+        error?.response?.data?.errors?.[0] || ({} as any);
       console.log(`${title} - ${detail}`);
     }
   };
@@ -280,13 +358,13 @@ export default function Booking() {
 
             <div className={Styles.traveler_list}>
               {fields.map((item, index) => {
-                let travelerLabel = "Adult";
+                const typedItem = item as unknown as TravelerForm & {
+                  fieldId: string;
+                };
 
-                if (item.type === 1) {
-                  travelerLabel = "Child";
-                } else if (item.type === 2) {
-                  travelerLabel = "Infant";
-                }
+                let travelerLabel = "Adult";
+                if (typedItem.type === 1) travelerLabel = "Child";
+                else if (typedItem.type === 2) travelerLabel = "Infant";
 
                 return (
                   <div
@@ -311,6 +389,7 @@ export default function Booking() {
                             {...field}
                             fieldClassNames="rounded-md"
                             groupClassNames="mt-6"
+                            id=""
                             label="Gender"
                             index={index}
                             error={fieldState?.error}
@@ -361,7 +440,6 @@ export default function Booking() {
                             value={field.value}
                             error={fieldState?.error}
                             mask="00.00.0000"
-                            autoComplete="off"
                           />
                         )}
                       />
@@ -377,7 +455,6 @@ export default function Booking() {
                             label="Passport Number"
                             id={`traveler-${index}-passport`}
                             value={field.value}
-                            max="14"
                             error={fieldState?.error}
                           />
                         )}
