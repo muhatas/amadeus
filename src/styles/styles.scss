@@ -1,7 +1,8 @@
-@import "tailwindcss";
-@import "@/styles/variables.scss";
-@import "@/styles/mixins.scss";
-@import "react-datepicker/src/stylesheets/datepicker.scss";
+@use "tailwindcss" as *;
+@use "@/styles/variables.scss" as *;
+@use "@/styles/mixins.scss" as *;
+@use "react-datepicker/src/stylesheets/datepicker.scss" as *;
+
 @import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap");
 
 * {

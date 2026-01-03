@@ -18,7 +18,6 @@
   }
 
   &_control {
-    height: 50px;
     @include width-height(100%, 50px);
     padding: 0 16px;
     font-weight: 800;

@@ -30,9 +30,9 @@ type LocationProps = {
   fieldClassNames?: string;
   id: string;
   label: string;
-  value?: string;
-  setValue: Dispatch<SetStateAction<string>>;
-  setCityCode: Dispatch<SetStateAction<string>>;
+  value?: string | null;
+  setValue: Dispatch<SetStateAction<string | null>>;
+  setCityCode: Dispatch<SetStateAction<string | null>>;
 };
 
 type LocationApiItem = {

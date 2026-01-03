@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 import { BookingProvider } from "@/context/bookingContext";
 
 // Styles
-import "../src/styles/styles.scss";
+import "@/styles/styles.scss";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -16,7 +16,7 @@ type BaseControlProps = {
   groupClassNames?: string;
   id: string;
   name: string;
-  value?: string;
+  value?: string | null;
   label: string;
   error?: FieldError;
   readOnly?: boolean;
@@ -62,6 +62,7 @@ export const TextControl = forwardRef<HTMLInputElement, TextControlProps>(
       error,
       readOnly,
       groupClassNames,
+      disabled,
       onChange,
       onClick,
     },
@@ -75,6 +76,7 @@ export const TextControl = forwardRef<HTMLInputElement, TextControlProps>(
           className={classNames(Styles.form_label, {
             [Styles.has_error]: !!message,
             [Styles.has_filled]: !!value,
+            "text-gray-400": disabled,
           })}
           htmlFor={id}
         >
@@ -93,6 +95,7 @@ export const TextControl = forwardRef<HTMLInputElement, TextControlProps>(
             {
               [Styles.has_error]: !!message,
               [Styles.filled]: !!value,
+              "text-gray-400": disabled,
             },
             "grow text-md font-bold bg-white block outline-1 outline-gray-300"
           )}
@@ -101,6 +104,7 @@ export const TextControl = forwardRef<HTMLInputElement, TextControlProps>(
           type="text"
           value={value ?? ""}
           readOnly={readOnly}
+          disabled={disabled}
           onChange={onChange}
           onClick={onClick}
         />
@@ -124,6 +128,7 @@ export const TextAreaControl = forwardRef<
       label,
       error,
       groupClassNames,
+      disabled,
       onChange,
       onClick,
     },
@@ -137,6 +142,7 @@ export const TextAreaControl = forwardRef<
           className={classNames(Styles.form_label, {
             [Styles.has_error]: !!message,
             [Styles.has_filled]: !!value,
+            "text-gray-400": disabled,
           })}
           htmlFor={id}
         >
@@ -151,12 +157,14 @@ export const TextAreaControl = forwardRef<
             {
               [Styles.has_error]: !!message,
               [Styles.filled]: !!value,
+              "text-gray-400": disabled,
             },
             "grow text-md font-bold bg-white block outline-1 outline-gray-300"
           )}
           id={id}
           name={name}
           value={value || ""}
+          disabled={disabled}
           onChange={onChange}
           onClick={onClick}
         ></textarea>
@@ -178,6 +186,7 @@ export const DateControl = forwardRef<HTMLInputElement, DateControlProps>(
       error,
       mask,
       groupClassNames,
+      disabled,
       onChange,
       onClick,
     },
@@ -191,6 +200,7 @@ export const DateControl = forwardRef<HTMLInputElement, DateControlProps>(
           className={classNames(Styles.form_label, {
             [Styles.has_error]: !!message,
             [Styles.has_filled]: !!value,
+            "text-gray-400": disabled,
           })}
           htmlFor={id}
         >
@@ -205,6 +215,7 @@ export const DateControl = forwardRef<HTMLInputElement, DateControlProps>(
             {
               [Styles.has_error]: !!message,
               [Styles.filled]: !!value,
+              "text-gray-400": disabled,
             },
             "grow text-md font-bold bg-white block outline-1 outline-gray-300"
           )}
@@ -215,6 +226,7 @@ export const DateControl = forwardRef<HTMLInputElement, DateControlProps>(
           value={value || ""}
           autoComplete="off"
           mask={mask}
+          disabled={disabled}
           onChange={onChange}
           onClick={onClick}
         />

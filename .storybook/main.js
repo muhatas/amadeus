@@ -26,7 +26,7 @@ const config = {
         alias: {
           "@": path.resolve(__dirname, "../src"),
         },
-      },
+      }
     });
   },
 };
