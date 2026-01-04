@@ -21,6 +21,7 @@ export const getYear = (value: number): number => {
   return year - value;
 };
 
-export const normalizeToArray = <T>(value: T[] | number): T[] => {
-  return Array.isArray(value) ? value : (Array.from({ length: value }) as T[]);
+export const normalizeToArray = <T>(value?: T[] | T | null): T[] => {
+  if (value == null) return [];
+  return Array.isArray(value) ? value : [value];
 };

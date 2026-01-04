@@ -9,7 +9,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import slugify from "slugify";
 import classNames from "classnames";
+import _ from "lodash";
 
+// Components
+import { CheckboxControl } from "@/utils/templates";
+
+// Utils
 import { normalizeToArray } from "@/utils/shortcuts";
 
 // Types
@@ -43,9 +48,9 @@ type FilterType = keyof SelectedFiltersState;
 type FilterProps = {
   title: string;
   list?: FilterItem[] | null;
-  count?: unknown;
+  count?: number | null;
   type: FilterType;
-  selectedFilters: Array<string | number>;
+  selectedFilters: string[];
   setSelectedFilters: Dispatch<SetStateAction<SelectedFiltersState>>;
 };
 
@@ -87,9 +92,9 @@ export const Filter = ({
     }
   };
 
-  const onSelect = (code: string | number): void => {
+  const onSelect = (code: string): void => {
     setSelectedFilters((prev) => {
-      const current = new Set(prev?.[type] || []);
+      const current = new Set<string>(prev[type] || []);
       if (current.has(code)) current.delete(code);
       else current.add(code);
 
@@ -100,6 +105,15 @@ export const Filter = ({
     });
   };
 
+  const source = list ?? count;
+
+  const normalized =
+    source == null
+      ? []
+      : typeof source === "number"
+      ? _.range(0, source + 1)
+      : normalizeToArray<FilterItem>(source);
+
   useEffect(() => {
     document.addEventListener("mousedown", closeDropdown);
     return () => {
@@ -108,11 +122,11 @@ export const Filter = ({
   }, []);
 
   return (
-    <div className={classNames(Styles.filter, "relative")}>
+    <div className={classNames(Styles.filter, "relative inline-block")}>
       <div
         className={classNames(
           Styles.filter_toggle,
-          "px-4 flex justify-between items-center"
+          "px-4 flex justify-between items-center hover:cursor-pointer"
         )}
         ref={triggerRef}
         onClick={() => setIsShow(!isShow)}
@@ -121,45 +135,40 @@ export const Filter = ({
         <FontAwesomeIcon icon={isShow ? faAngleUp : faAngleDown} />
       </div>
       {isShow && (
-        <nav
+        <div
           className={classNames(Styles.filter_dropdown, "p-4 absolute")}
           ref={dropdownRef}
         >
           <ul className="p-0 m-0">
-            {normalizeToArray(list || count)?.map((item, index) => (
-              <li
-                className={classNames({
-                  "mt-4": index !== 0,
-                })}
-                key={index}
-              >
-                <input
-                  type="checkbox"
-                  id={item?.code || `stop-${index}`}
-                  name={item?.code || `stop-${index}`}
-                  onChange={() => onSelect(item?.code || index)}
-                  checked={
-                    selectedFilters?.includes(item?.code || index) || false
-                  }
-                />
-                <label
-                  htmlFor={item?.code || `stop-${index}`}
-                  className="relative flex gap-2"
+            {normalized?.map((item, index) => {
+              const isNumber = typeof item === "number";
+
+              const code = isNumber ? String(item) : item.code ?? String(index);
+              const name = isNumber
+                ? item === 0
+                  ? "NonStop"
+                  : `${item} ${item === 1 ? "Stop" : "Stops"}`
+                : item.name ?? item.code ?? String(index);
+
+              return (
+                <li
+                  className={classNames({
+                    "mt-4": index !== 0,
+                  })}
+                  key={index}
                 >
-                  {slugify(
-                    item?.name ||
-                      item?.code ||
-                      `${index === 0 ? "NonStop" : `${index} Stop`}`,
-                    {
-                      lower: true,
-                      replacement: " ",
-                    }
-                  )}
-                </label>
-              </li>
-            ))}
+                  <CheckboxControl
+                    id={String(code)}
+                    name={String(code)}
+                    label={slugify(name, { lower: true, replacement: " " })}
+                    checked={selectedFilters.includes(code)}
+                    onChange={() => onSelect(code)}
+                  />
+                </li>
+              );
+            })}
           </ul>
-        </nav>
+        </div>
       )}
     </div>
   );
@@ -168,7 +177,7 @@ export const Filter = ({
 export const Sort = ({ sort, setSorted }: SortProps) => {
   return (
     <select
-      className={classNames(Styles.sorting, "px-4")}
+      className={classNames(Styles.sorting, "px-4 hover:cursor-pointer")}
       value={sort}
       onChange={(e) => setSorted(e.target.value as SortKey)}
     >

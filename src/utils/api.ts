@@ -1,11 +1,8 @@
-import Cookies from "js-cookie";
 import axios, {
   type AxiosInstance,
   type AxiosRequestConfig,
   type AxiosResponse,
 } from "axios";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -13,26 +10,18 @@ class Client {
   private axios: AxiosInstance;
 
   constructor() {
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-    };
-
-    const token = Cookies.get("token");
-
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-
     this.axios = axios.create({
-      baseURL: API_URL,
-      headers,
+      baseURL: "/api/proxy",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
   }
 
   private resolveResponse<T>(response: AxiosResponse<T>): T {
     return response.data;
   }
-
+  
   parseResponse<T>(res: AxiosResponse<{ data: { data: T } }>): T {
     return res.data.data.data;
   }

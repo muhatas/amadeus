@@ -216,47 +216,8 @@
     box-shadow: 0 0 16px 0 rgba(17, 43, 68, 0.0784313725);
 
     ul {
-      li {
-        input {
-          display: none;
-
-          & ~ label {
-            font-size: $f14;
-            color: $text-color;
-            text-transform: capitalize;
-
-            &::before {
-              @include width-height(18px, 18px);
-              content: "";
-              border: 2px solid #ddd;
-              border-radius: 2px;
-              display: block;
-            }
-          }
-
-          &:checked {
-            & ~ label {
-              &::before {
-                background: $primary-dark;
-                border-color: $primary-dark;
-              }
-
-              &::after {
-                @include width-height(10px, 5px);
-                content: "";
-                position: absolute;
-                top: 5px;
-                left: 4px;
-                z-index: 1;
-                transform: rotate(-45deg);
-                border-left: 2px solid #fff;
-                border-bottom: 2px solid #fff;
-                display: block;
-              }
-            }
-          }
-        }
-      }
+      max-height: 216px;
+      overflow: auto;
     }
 
     &::before,

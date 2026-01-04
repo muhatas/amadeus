@@ -35,7 +35,7 @@ export type SidebarProps = {
 };
 
 export type SelectedFiltersState = {
-  selectedAirports: Array<string | number>;
-  selectedAirlines: Array<string | number>;
-  selectedStops: Array<string | number>;
+  selectedAirports: string[];
+  selectedAirlines: string[];
+  selectedStops: string[];
 };

@@ -1,4 +1,9 @@
-import { forwardRef, ChangeEventHandler, MouseEventHandler } from "react";
+import {
+  forwardRef,
+  ChangeEventHandler,
+  MouseEventHandler,
+  SetStateAction,
+} from "react";
 
 import classNames from "classnames";
 import { IMaskInput } from "react-imask";
@@ -46,9 +51,15 @@ type DatePickerControlProps = BaseControlProps &
     isReturn?: boolean;
   };
 
-type GenderControlProps = BaseControlProps &
+type RadioControlProps = BaseControlProps &
   TextControlEventProps & {
     index: number;
+  };
+
+type CheckboxControlProps = BaseControlProps &
+  TextControlEventProps & {
+    checked: boolean;
+    onChange?: ChangeEventHandler<HTMLInputElement>;
   };
 
 export const TextControl = forwardRef<HTMLInputElement, TextControlProps>(
@@ -237,7 +248,7 @@ export const DateControl = forwardRef<HTMLInputElement, DateControlProps>(
   }
 );
 
-export const GenderControl = forwardRef<HTMLInputElement, GenderControlProps>(
+export const RadioControl = forwardRef<HTMLInputElement, RadioControlProps>(
   ({ id, name, value, label, error, index, onChange }, ref) => {
     const message = error?.message;
 
@@ -253,7 +264,7 @@ export const GenderControl = forwardRef<HTMLInputElement, GenderControlProps>(
           <input
             ref={ref}
             className={Styles.form_radio}
-            id={`traveler-${index}-male`}
+            id={`radio-${index}-male`}
             name={name}
             type="radio"
             defaultValue="MALE"
@@ -262,7 +273,7 @@ export const GenderControl = forwardRef<HTMLInputElement, GenderControlProps>(
           />
           <label
             className="relative inline-flex items-center gap-2"
-            htmlFor={`traveler-${index}-male`}
+            htmlFor={`radio-${index}-male`}
           >
             Male
           </label>
@@ -272,7 +283,7 @@ export const GenderControl = forwardRef<HTMLInputElement, GenderControlProps>(
           <input
             ref={ref}
             className={Styles.form_radio}
-            id={`${name}-female-${index}`}
+            id={`radio-${index}-female`}
             name={name}
             type="radio"
             defaultValue="FEMALE"
@@ -281,7 +292,7 @@ export const GenderControl = forwardRef<HTMLInputElement, GenderControlProps>(
           />
           <label
             className="relative inline-flex items-center gap-2"
-            htmlFor={`${name}-female-${index}`}
+            htmlFor={`radio-${index}-female`}
           >
             Female
           </label>
@@ -316,7 +327,7 @@ export const DatePickerInput = forwardRef<
             [Styles.filled]: !!value,
             "text-gray-400": isReturn === false,
           },
-          "grow text-md font-bold bg-white block outline-1 outline-gray-300"
+          "grow text-md font-bold bg-white block outline-1 outline-gray-300 hover:enabled:cursor-pointer"
         )}
         id={id}
         type="text"
@@ -327,6 +338,38 @@ export const DatePickerInput = forwardRef<
         onChange={onChange}
         onClick={onClick}
       />
+    </div>
+  );
+});
+
+export const CheckboxControl = forwardRef<
+  HTMLInputElement,
+  CheckboxControlProps
+>(({ id, name, label, error, checked, onChange }, ref) => {
+  const message = error?.message;
+
+  return (
+    <div className={classNames(Styles.form_group, "mt-2")}>
+      <div className="inline-flex">
+        <input
+          ref={ref}
+          className={Styles.form_checkbox}
+          id={`checkbox-${id}`}
+          name={name}
+          type="checkbox"
+          value={id}
+          checked={checked}
+          onChange={onChange}
+        />
+        <label
+          className="relative inline-flex items-center gap-2"
+          htmlFor={`checkbox-${id}`}
+        >
+          {label}
+        </label>
+      </div>
+
+      {!!message && <span className={Styles.form_helper}>{message}</span>}
     </div>
   );
 });

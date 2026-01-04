@@ -15,7 +15,7 @@ import {
   TextControl,
   TextAreaControl,
   DateControl,
-  GenderControl,
+  RadioControl,
 } from "@/utils/templates";
 import Sidebar from "@/components/Booking/Sidebar";
 
@@ -385,7 +385,7 @@ export default function Booking() {
                         name={`travelers.${index}.gender`}
                         control={control}
                         render={({ field, fieldState }) => (
-                          <GenderControl
+                          <RadioControl
                             {...field}
                             fieldClassNames="rounded-md"
                             groupClassNames="mt-6"
