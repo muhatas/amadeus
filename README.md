@@ -22,7 +22,6 @@ Flow: **Search → Results → Filters → Flight Selection → Booking → Conf
 
 <p align="center">
   <img src="docs/amadeus-booking.png" width="320" />
-  <img src="docs/amadeus-pages-flow.gif" width="320" />
 </p>
 
 ---
