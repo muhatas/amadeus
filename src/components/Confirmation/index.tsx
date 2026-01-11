@@ -6,7 +6,7 @@ import { ClientApi } from "@/utils/api";
 
 type ConfirmationPageProps = {
   id: string;
-}
+};
 
 export default function ConfirmationPage({ id }: ConfirmationPageProps) {
   const getBookingDetails = async () => {
@@ -18,7 +18,7 @@ export default function ConfirmationPage({ id }: ConfirmationPageProps) {
   }, [id]);
 
   return (
-    <div>
+    <div className="mx-auto max-w-7xl items-center justify-between p-6 lg:px-8">
       <div>Thanks for your booking!</div>
       <div>Your booking is successful.</div>
     </div>
