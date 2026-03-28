@@ -1,7 +1,7 @@
 import FlightList from "@/components/FlightList";
 
 type FlightListPageProps = {
-  searchParams: {
+  searchParams: Promise<{
     originLocationCode: string;
     destinationLocationCode: string;
     departureDate: string;
@@ -10,7 +10,7 @@ type FlightListPageProps = {
     children?: number;
     infants?: number;
     max?: number;
-  };
+  }>;
 };
 
 export default async function FlightListPage({
@@ -25,7 +25,7 @@ export default async function FlightListPage({
     children: childCount,
     infants,
     max,
-  } = searchParams;
+  } = await searchParams;
 
   return (
     <FlightList

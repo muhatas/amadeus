@@ -1,12 +1,14 @@
 import Confirmation from "@/components/Confirmation";
 
 type ConfirmationPageProps = {
-  params: {
+  params: Promise<{
     _id: string;
-  };
+  }>;
 };
 
-export default function ConfirmationPage({ params }: ConfirmationPageProps) {
-  const { _id } = params;
+export default async function ConfirmationPage({
+  params,
+}: ConfirmationPageProps) {
+  const { _id } = await params;
   return <Confirmation id={_id} />;
 }
