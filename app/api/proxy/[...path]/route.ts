@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { getAccessToken } from "@/utils/auth";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
 
 function buildTargetUrl(pathParts: string[], reqUrl: string) {
   const incoming = new URL(reqUrl);
@@ -45,7 +45,7 @@ async function ensureValidToken(): Promise<string | null> {
 async function forward(req: NextRequest, pathParts: string[], retried = false) {
   if (!API_URL) {
     return NextResponse.json(
-      { message: "NEXT_PUBLIC_API_URL is missing" },
+      { message: "API_URL is missing" },
       { status: 500 }
     );
   }
