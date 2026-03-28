@@ -86,20 +86,25 @@ async function forward(req: NextRequest, pathParts: string[], retried = false) {
   });
 }
 
-type Ctx = { params: { path: string[] } };
+type Ctx = { params: Promise<{ path: string[] }> };
 
 export async function GET(req: NextRequest, ctx: Ctx) {
-  return forward(req, ctx.params.path);
+  const { path } = await ctx.params;
+  return forward(req, path);
 }
 export async function POST(req: NextRequest, ctx: Ctx) {
-  return forward(req, ctx.params.path);
+  const { path } = await ctx.params;
+  return forward(req, path);
 }
 export async function PUT(req: NextRequest, ctx: Ctx) {
-  return forward(req, ctx.params.path);
+  const { path } = await ctx.params;
+  return forward(req, path);
 }
 export async function PATCH(req: NextRequest, ctx: Ctx) {
-  return forward(req, ctx.params.path);
+  const { path } = await ctx.params;
+  return forward(req, path);
 }
 export async function DELETE(req: NextRequest, ctx: Ctx) {
-  return forward(req, ctx.params.path);
+  const { path } = await ctx.params;
+  return forward(req, path);
 }
