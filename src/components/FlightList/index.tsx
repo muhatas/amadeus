@@ -23,7 +23,7 @@ type FlightListContainerProps = {
   departureDate: string;
   returnDate?: string;
   adults: number;
-  children?: number;
+  childCount?: number;
   infants?: number;
   max?: number;
 };
@@ -62,7 +62,7 @@ export default function FlightListContainer({
   departureDate,
   returnDate,
   adults,
-  children,
+  childCount,
   infants,
   max,
 }: FlightListContainerProps) {
@@ -98,7 +98,7 @@ export default function FlightListContainer({
       departureDate,
       returnDate,
       adults,
-      children,
+      children: childCount,
       infants,
       max,
     };
@@ -210,8 +210,20 @@ export default function FlightListContainer({
   }, [filteredFlights, sort]);
 
   useEffect(() => {
-    if (isLoading) void getFlights();
-  }, [isLoading]);
+    if (isLoading) {
+      void getFlights();
+    }
+  }, [
+    adults,
+    childCount,
+    departureDate,
+    destinationLocationCode,
+    infants,
+    isLoading,
+    max,
+    originLocationCode,
+    returnDate,
+  ]);
 
   return (
     <div className="container mx-auto">

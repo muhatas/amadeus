@@ -22,7 +22,7 @@ export default async function FlightListPage({
     departureDate,
     returnDate,
     adults,
-    children,
+    children: childCount,
     infants,
     max,
   } = searchParams;
@@ -34,7 +34,7 @@ export default async function FlightListPage({
       departureDate={departureDate}
       returnDate={returnDate}
       adults={adults}
-      children={children}
+      childCount={childCount}
       infants={infants}
       max={max}
     />

@@ -9,12 +9,16 @@ type ConfirmationPageProps = {
 };
 
 export default function ConfirmationPage({ id }: ConfirmationPageProps) {
-  const getBookingDetails = async () => {
-    const response = await ClientApi.get(`/v1/booking/flight-orders/${id}`);
-  };
-
   useEffect(() => {
-    if (id) getBookingDetails();
+    if (!id) {
+      return;
+    }
+
+    const getBookingDetails = async () => {
+      await ClientApi.get(`/v1/booking/flight-orders/${id}`);
+    };
+
+    void getBookingDetails();
   }, [id]);
 
   return (

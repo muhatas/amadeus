@@ -132,11 +132,12 @@ export default function Booking() {
     selectedFlight?: SelectedFlight;
   };
 
-  const travelerPricings: TravelerPricing[] =
-    selectedFlight?.[0]?.travelerPricings ?? [];
-
   const defaultTravelers = useMemo(
-    () =>
+    () => {
+      const travelerPricings: TravelerPricing[] =
+        selectedFlight?.[0]?.travelerPricings ?? [];
+
+      return (
       travelerPricings.length > 0
         ? travelerPricings.map((item) => {
             const travelerType = item.travelerType;
@@ -170,8 +171,10 @@ export default function Booking() {
               passportNumber: "",
               type: 0,
             },
-          ],
-    [travelerPricings]
+          ]
+      );
+    },
+    [selectedFlight]
   );
 
   const {
@@ -282,7 +285,7 @@ export default function Booking() {
     if (!selectedFlight) {
       return router.back();
     }
-  }, [selectedFlight]);
+  }, [router, selectedFlight]);
 
   return (
     <div className="container mx-auto">

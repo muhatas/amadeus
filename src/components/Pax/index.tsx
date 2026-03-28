@@ -19,8 +19,8 @@ import Styles from "./styles.module.scss";
 type PaxGlobalTypes = {
   adults: number;
   setAdults: Dispatch<SetStateAction<number>>;
-  children: number;
-  setChildren: Dispatch<SetStateAction<number>>;
+  childCount: number;
+  setChildCount: Dispatch<SetStateAction<number>>;
   infants: number;
   setInfants: Dispatch<SetStateAction<number>>;
 };
@@ -76,10 +76,10 @@ export const PaxDropDown = forwardRef<HTMLDivElement, PaxDropDownProps>(
     {
       isShowing,
       adults,
-      children,
+      childCount,
       infants,
       setAdults,
-      setChildren,
+      setChildCount,
       setInfants,
     },
     ref
@@ -99,8 +99,8 @@ export const PaxDropDown = forwardRef<HTMLDivElement, PaxDropDownProps>(
               <PaxCounter label="Adult" value={adults} counter={setAdults} />
               <PaxCounter
                 label="Child"
-                value={children}
-                counter={setChildren}
+                value={childCount}
+                counter={setChildCount}
               />
               <PaxCounter label="Infant" value={infants} counter={setInfants} />
             </ul>
@@ -119,15 +119,15 @@ export default function Pax({
   label,
   adults,
   setAdults,
-  children,
-  setChildren,
+  childCount,
+  setChildCount,
   infants,
   setInfants,
 }: PaxProps) {
   const [isPaxDropDownOpen, setIsPaxDropDownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLInputElement | null>(null);
-  const paxTotal = adults + children + infants;
+  const paxTotal = adults + childCount + infants;
   const newValue =
     paxTotal == 1
       ? `${paxTotal} Traveler`
@@ -173,12 +173,12 @@ export default function Pax({
 
       <PaxDropDown
         adults={adults}
-        children={children}
+        childCount={childCount}
         infants={infants}
         isShowing={isPaxDropDownOpen}
         ref={dropdownRef}
         setAdults={setAdults}
-        setChildren={setChildren}
+        setChildCount={setChildCount}
         setInfants={setInfants}
       />
     </div>

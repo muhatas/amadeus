@@ -44,7 +44,7 @@ export default function Search() {
   );
   const [isReturn, setIsReturn] = useState<boolean>(false);
   const [adults, setAdults] = useState<number>(1);
-  const [children, setChildren] = useState<number>(0);
+  const [childCount, setChildCount] = useState<number>(0);
   const [infants, setInfants] = useState<number>(0);
 
   const onSearch = () => {
@@ -55,7 +55,7 @@ export default function Search() {
       adults,
       max: 250,
       ...(isReturn && { returnDate }),
-      ...(children && { children }),
+      ...(childCount && { children: childCount }),
       ...(infants && { infants }),
     };
 
@@ -117,8 +117,8 @@ export default function Search() {
           label="Travelers"
           adults={adults}
           setAdults={setAdults}
-          children={children}
-          setChildren={setChildren}
+          childCount={childCount}
+          setChildCount={setChildCount}
           infants={infants}
           setInfants={setInfants}
         />

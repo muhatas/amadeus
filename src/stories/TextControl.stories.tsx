@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { TextControl } from "@/utils/templates";
 
 const meta: Meta<typeof TextControl> = {
   title: "Form/TextControl",
   component: TextControl,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
     fieldClassNames: "rounded-md",
     name: "firstName",

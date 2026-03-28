@@ -126,6 +126,8 @@ export const TextControl = forwardRef<HTMLInputElement, TextControlProps>(
   }
 );
 
+TextControl.displayName = "TextControl";
+
 export const TextAreaControl = forwardRef<
   HTMLTextAreaElement,
   TextAreaControlProps
@@ -185,6 +187,8 @@ export const TextAreaControl = forwardRef<
     );
   }
 );
+
+TextAreaControl.displayName = "TextAreaControl";
 
 export const DateControl = forwardRef<HTMLInputElement, DateControlProps>(
   (
@@ -248,6 +252,8 @@ export const DateControl = forwardRef<HTMLInputElement, DateControlProps>(
   }
 );
 
+DateControl.displayName = "DateControl";
+
 export const RadioControl = forwardRef<HTMLInputElement, RadioControlProps>(
   ({ id, name, value, label, error, index, onChange }, ref) => {
     const message = error?.message;
@@ -304,6 +310,8 @@ export const RadioControl = forwardRef<HTMLInputElement, RadioControlProps>(
   }
 );
 
+RadioControl.displayName = "RadioControl";
+
 export const DatePickerInput = forwardRef<
   HTMLInputElement,
   DatePickerControlProps
@@ -342,6 +350,8 @@ export const DatePickerInput = forwardRef<
   );
 });
 
+DatePickerInput.displayName = "DatePickerInput";
+
 export const CheckboxControl = forwardRef<
   HTMLInputElement,
   CheckboxControlProps
@@ -373,3 +383,5 @@ export const CheckboxControl = forwardRef<
     </div>
   );
 });
+
+CheckboxControl.displayName = "CheckboxControl";
