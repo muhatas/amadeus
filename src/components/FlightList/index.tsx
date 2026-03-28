@@ -28,6 +28,17 @@ type FlightListContainerProps = {
   max?: number;
 };
 
+type FlightOffersRequestParams = {
+  originLocationCode: string;
+  destinationLocationCode: string;
+  departureDate: string;
+  returnDate?: string;
+  adults: number;
+  children?: number;
+  infants?: number;
+  max?: number;
+};
+
 type DictionariesLocations = {
   cityCode: string;
   countryCode: string;
@@ -92,7 +103,7 @@ export default function FlightListContainer({
   };
 
   const getFlights = async (): Promise<void> => {
-    const payload: FlightListContainerProps = {
+    const payload: FlightOffersRequestParams = {
       originLocationCode,
       destinationLocationCode,
       departureDate,
