@@ -1,3 +1,5 @@
+import { getApiUrl, getClientId, getClientSecret } from "@/utils/env";
+
 type OAuthTokenResponse = {
   access_token: string;
   expires_in: number;
@@ -8,9 +10,9 @@ export const getAccessToken = async (): Promise<{
   access_token: string;
   expires_in: number;
 }> => {
-  const apiUrl = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
-  const clientId = process.env.CLIENT_ID;
-  const clientSecret = process.env.CLIENT_SECRET;
+  const apiUrl = getApiUrl();
+  const clientId = getClientId();
+  const clientSecret = getClientSecret();
 
   if (!apiUrl || !clientId || !clientSecret) {
     throw new Error("Missing required environment variables");

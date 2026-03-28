@@ -1,12 +1,17 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { getAccessToken } from "@/utils/auth";
-
-const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
+import { getApiUrl } from "@/utils/env";
 
 function buildTargetUrl(pathParts: string[], reqUrl: string) {
   const incoming = new URL(reqUrl);
-  const target = new URL(`${API_URL}/${pathParts.join("/")}`);
+  const apiUrl = getApiUrl();
+
+  if (!apiUrl) {
+    throw new Error("API_URL is missing");
+  }
+
+  const target = new URL(`${apiUrl}/${pathParts.join("/")}`);
   target.search = incoming.search;
   return target;
 }
@@ -43,7 +48,7 @@ async function ensureValidToken(): Promise<string | null> {
 }
 
 async function forward(req: NextRequest, pathParts: string[], retried = false) {
-  if (!API_URL) {
+  if (!getApiUrl()) {
     return NextResponse.json(
       { message: "API_URL is missing" },
       { status: 500 }
