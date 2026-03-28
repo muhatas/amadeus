@@ -34,6 +34,12 @@ export const getAccessToken = async (): Promise<{
   const req = await fetch(`${apiUrl}/v1/security/oauth2/token`, options);
 
   if (!req.ok) {
+    const errorText = await req.text();
+    console.error("[amadeus-auth] Token request failed", {
+      apiUrl,
+      status: req.status,
+      body: errorText.slice(0, 500),
+    });
     throw new Error(`Token request failed: ${req.status}`);
   }
 

@@ -42,62 +42,106 @@ async function ensureValidToken(): Promise<string | null> {
   return access_token;
 }
 
+function logProxyError(
+  stage: string,
+  req: NextRequest,
+  pathParts: string[],
+  error: unknown,
+  extra?: Record<string, unknown>
+) {
+  console.error("[amadeus-proxy] Request failed", {
+    stage,
+    method: req.method,
+    path: `/${pathParts.join("/")}`,
+    search: new URL(req.url).search,
+    error: error instanceof Error ? error.message : String(error),
+    stack: error instanceof Error ? error.stack : undefined,
+    ...extra,
+  });
+}
+
 async function forward(req: NextRequest, pathParts: string[], retried = false) {
-  const token = await ensureValidToken();
   const targetUrl = buildTargetUrl(pathParts, req.url);
 
-  const headers = new Headers(req.headers);
-  headers.delete("host");
+  try {
+    const token = await ensureValidToken();
+    const headers = new Headers(req.headers);
+    headers.delete("host");
 
-  headers.set("Content-Type", "application/json");
-  if (token) headers.set("Authorization", `Bearer ${token}`);
+    headers.set("Content-Type", "application/json");
+    if (token) headers.set("Authorization", `Bearer ${token}`);
 
-  const hasBody = !["GET", "HEAD"].includes(req.method);
-  const body = hasBody ? await req.text() : undefined;
+    const hasBody = !["GET", "HEAD"].includes(req.method);
+    const body = hasBody ? await req.text() : undefined;
 
-  const upstreamRes = await fetch(targetUrl, {
-    method: req.method,
-    headers,
-    body,
-    cache: "no-store",
-  });
+    const upstreamRes = await fetch(targetUrl, {
+      method: req.method,
+      headers,
+      body,
+      cache: "no-store",
+    });
 
-  if (upstreamRes.status === 401 && !retried) {
-    const cookieStore = await cookies();
-    cookieStore.delete("token");
-    cookieStore.delete("token_expire");
-    return forward(req, pathParts, true);
+    if (upstreamRes.status === 401 && !retried) {
+      const cookieStore = await cookies();
+      cookieStore.delete("token");
+      cookieStore.delete("token_expire");
+      return forward(req, pathParts, true);
+    }
+
+    const resText = await upstreamRes.text();
+    const contentType =
+      upstreamRes.headers.get("content-type") ?? "application/json";
+
+    if (!upstreamRes.ok) {
+      console.error("[amadeus-proxy] Upstream request failed", {
+        method: req.method,
+        targetUrl: targetUrl.toString(),
+        status: upstreamRes.status,
+        body: resText.slice(0, 500),
+      });
+    }
+
+    return new NextResponse(resText, {
+      status: upstreamRes.status,
+      headers: { "Content-Type": contentType },
+    });
+  } catch (error) {
+    logProxyError("forward", req, pathParts, error, {
+      targetUrl: targetUrl.toString(),
+      retried,
+      apiUrl: getApiUrl(),
+    });
+    throw error;
   }
-
-  const resText = await upstreamRes.text();
-  const contentType =
-    upstreamRes.headers.get("content-type") ?? "application/json";
-
-  return new NextResponse(resText, {
-    status: upstreamRes.status,
-    headers: { "Content-Type": contentType },
-  });
 }
 
 type Ctx = { params: Promise<{ path: string[] }> };
 
-export async function GET(req: NextRequest, ctx: Ctx) {
+async function handleRequest(req: NextRequest, ctx: Ctx) {
   const { path } = await ctx.params;
-  return forward(req, path);
+  try {
+    return await forward(req, path);
+  } catch (error) {
+    logProxyError("handler", req, path, error);
+    return NextResponse.json(
+      { error: "Proxy request failed" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(req: NextRequest, ctx: Ctx) {
+  return handleRequest(req, ctx);
 }
 export async function POST(req: NextRequest, ctx: Ctx) {
-  const { path } = await ctx.params;
-  return forward(req, path);
+  return handleRequest(req, ctx);
 }
 export async function PUT(req: NextRequest, ctx: Ctx) {
-  const { path } = await ctx.params;
-  return forward(req, path);
+  return handleRequest(req, ctx);
 }
 export async function PATCH(req: NextRequest, ctx: Ctx) {
-  const { path } = await ctx.params;
-  return forward(req, path);
+  return handleRequest(req, ctx);
 }
 export async function DELETE(req: NextRequest, ctx: Ctx) {
-  const { path } = await ctx.params;
-  return forward(req, path);
+  return handleRequest(req, ctx);
 }
