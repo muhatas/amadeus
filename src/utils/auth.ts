@@ -4,22 +4,24 @@ type OAuthTokenResponse = {
   token_type?: string;
 };
 
-const { API_URL, CLIENT_ID, CLIENT_SECRET } = process.env;
-
-if (!API_URL || !CLIENT_ID || !CLIENT_SECRET) {
-  throw new Error("Missing required environment variables");
-}
-
 export const getAccessToken = async (): Promise<{
   access_token: string;
   expires_in: number;
 }> => {
+  const apiUrl = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
+  const clientId = process.env.CLIENT_ID;
+  const clientSecret = process.env.CLIENT_SECRET;
+
+  if (!apiUrl || !clientId || !clientSecret) {
+    throw new Error("Missing required environment variables");
+  }
+
   const options: RequestInit = {
     method: "POST",
     body: new URLSearchParams({
       grant_type: "client_credentials",
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
+      client_id: clientId,
+      client_secret: clientSecret,
     }).toString(),
     headers: {
       Accept: "application/json",
@@ -27,7 +29,7 @@ export const getAccessToken = async (): Promise<{
     },
   };
 
-  const req = await fetch(`${API_URL}/v1/security/oauth2/token`, options);
+  const req = await fetch(`${apiUrl}/v1/security/oauth2/token`, options);
 
   if (!req.ok) {
     throw new Error(`Token request failed: ${req.status}`);
