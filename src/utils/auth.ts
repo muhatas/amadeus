@@ -14,7 +14,7 @@ export const getAccessToken = async (): Promise<{
   const clientId = getClientId();
   const clientSecret = getClientSecret();
 
-  if (!apiUrl || !clientId || !clientSecret) {
+  if (!clientId || !clientSecret) {
     throw new Error("Missing required environment variables");
   }
 

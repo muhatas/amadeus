@@ -1,10 +1,20 @@
-const API_URL_KEY = "API_URL";
-const PUBLIC_API_URL_KEY = "NEXT_PUBLIC_API_URL";
 const CLIENT_ID_KEY = "CLIENT_ID";
 const CLIENT_SECRET_KEY = "CLIENT_SECRET";
+const AMADEUS_ENVIRONMENT_KEY = "AMADEUS_ENVIRONMENT";
 
-export function getApiUrl(): string | undefined {
-  return process.env[API_URL_KEY] ?? process.env[PUBLIC_API_URL_KEY];
+const AMADEUS_API_URLS = {
+  production: "https://api.amadeus.com",
+  test: "https://test.api.amadeus.com",
+} as const;
+
+export function getApiUrl(): string {
+  const environment = process.env[AMADEUS_ENVIRONMENT_KEY]?.toLowerCase();
+
+  if (environment === "production") {
+    return AMADEUS_API_URLS.production;
+  }
+
+  return AMADEUS_API_URLS.test;
 }
 
 export function getClientId(): string | undefined {

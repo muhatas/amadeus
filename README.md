@@ -155,8 +155,9 @@ pnpm install
 Create a `.env.local` file:
 
 ```env
-AMADEUS_CLIENT_ID=YOUR_ID
-AMADEUS_CLIENT_SECRET=YOUR_SECRET
+CLIENT_ID=YOUR_ID
+CLIENT_SECRET=YOUR_SECRET
+AMADEUS_ENVIRONMENT=test
 ```
 
 > Do **not** commit `.env.local`.

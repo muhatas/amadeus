@@ -6,11 +6,6 @@ import { getApiUrl } from "@/utils/env";
 function buildTargetUrl(pathParts: string[], reqUrl: string) {
   const incoming = new URL(reqUrl);
   const apiUrl = getApiUrl();
-
-  if (!apiUrl) {
-    throw new Error("API_URL is missing");
-  }
-
   const target = new URL(`${apiUrl}/${pathParts.join("/")}`);
   target.search = incoming.search;
   return target;
@@ -48,13 +43,6 @@ async function ensureValidToken(): Promise<string | null> {
 }
 
 async function forward(req: NextRequest, pathParts: string[], retried = false) {
-  if (!getApiUrl()) {
-    return NextResponse.json(
-      { message: "API_URL is missing" },
-      { status: 500 }
-    );
-  }
-
   const token = await ensureValidToken();
   const targetUrl = buildTargetUrl(pathParts, req.url);
 
